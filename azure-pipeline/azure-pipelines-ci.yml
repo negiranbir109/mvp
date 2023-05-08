@@ -12,7 +12,7 @@ resources:
       endpoint: 'github.com_negiranbir109'
 
 jobs:
-  - template: .azure-pipelines/templates/build.yml@templates
+  - template: azure-pipelines/templates/build.yml@templates
     parameters:
       agent_pool_name: 'ubuntu-latest'
       publish_artifact_contents: |
