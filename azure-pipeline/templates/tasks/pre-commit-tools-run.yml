@@ -1,0 +1,6 @@
+steps:
+  - task: Bash@3
+    displayName: 'validate configuration'
+    inputs:
+      targetType: 'inline'
+      script: 'pre-commit run --all-files'

@@ -1,0 +1,22 @@
+parameters:
+- name: project_id
+  displayName: 'Deployment project id'
+  type: string
+- name: artifact_published_pipeline_id
+  displayName: 'Artifact published pipeline id'
+  type: string
+- name: publish_artifact_name
+  displayName: 'Publish artifact name'
+  type: string
+  default: drop
+
+steps:
+  - task: DownloadPipelineArtifact@2
+    displayName: 'download build artefacts'
+    inputs:
+      buildType: 'specific'
+      project: ${{ parameters.project_id }}
+      definition: ${{ parameters.artifact_published_pipeline_id }}
+      buildVersionToDownload: 'latest'
+      artifactName: ${{ parameters.publish_artifact_name}}
+      targetPath: '$(System.DefaultWorkingDirectory)'

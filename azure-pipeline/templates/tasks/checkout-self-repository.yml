@@ -1,0 +1,4 @@
+steps:
+  - checkout: self
+    displayName: 'checkout project repository'
+    #persistCredentials: true # terraform private modules repo (Github) authenticate via persisted credentials.

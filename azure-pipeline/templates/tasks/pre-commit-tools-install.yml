@@ -1,0 +1,10 @@
+steps:
+  - task: Bash@3
+    displayName: 'install pre-commit'
+    inputs:
+      targetType: 'inline'
+      script: |
+              python -m pip install --upgrade pip
+              pip install setuptools
+              pip install pre-commit
+              pre-commit install

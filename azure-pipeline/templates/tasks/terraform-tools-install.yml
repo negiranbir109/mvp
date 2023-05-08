@@ -1,0 +1,39 @@
+parameters:
+- name: initialise_with_backend
+  displayName: 'To skip backend configuration.'
+  type: boolean
+  default: false
+- name: tf_az_backend_resource_group_name
+  displayName: 'Terraform Azure backend resource group name'
+  type: string
+  default: ''
+- name: tf_az_backend_storage_account_name
+  displayName: 'Terraform Azure backend storage account name'
+  type: string
+  default: ''
+- name: tf_az_backend_container_name
+  displayName: 'Terraform Azure backend container name'
+  type: string
+  default: ''
+- name: tf_az_backend_state_file_name
+  displayName: 'Terraform Azure backend state file name'
+  type: string
+  default: ''
+
+steps:
+  - task: TerraformInstaller@0
+    displayName: 'install terraform'
+    inputs:
+      terraformVersion: 'latest'
+  - ${{ if eq(parameters.initialise_with_backend, false) }}:
+    - task: Bash@3
+      displayName: 'initialise terraform backend'
+      inputs:
+        targetType: 'inline'
+        script: 'terraform init -backend=false'
+  - ${{ if ne(parameters.initialise_with_backend, false) }}:
+    - task: Bash@3
+      displayName: 'initialise terraform backend'
+      inputs:
+        targetType: 'inline'
+        script: 'terraform init -backend-config=storage_account_name=${{ parameters.tf_az_backend_storage_account_name }} -backend-config=container_name=${{ parameters.tf_az_backend_container_name }} -backend-config=key=${{ parameters.tf_az_backend_state_file_name }} -backend-config=resource_group_name=${{ parameters.tf_az_backend_resource_group_name }} -backend-config=subscription_id=$(azureSubscriptionId) -backend-config=tenant_id=$(azureTenantId) -backend-config=client_id=$(azureClientId) -backend-config=client_secret=$(azureClientSecret)'

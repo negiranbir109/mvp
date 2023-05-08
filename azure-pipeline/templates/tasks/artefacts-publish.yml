@@ -1,0 +1,21 @@
+parameters:
+- name: publish_artifact_name
+  displayName: 'Publish artifact name'
+  type: string
+  default: drop
+- name: publish_artifact_contents
+  displayName: 'Publish artifact contents file paths'
+  type: string
+
+steps:
+  - task: CopyFiles@2
+    displayName: 'copy build artefacts'
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)'
+      contents: ${{ parameters.publish_artifact_contents }}
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+  - task: PublishBuildArtifacts@1
+    displayName: 'publish build artefacts'
+    inputs:
+      pathToPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: ${{ parameters.publish_artifact_name }}

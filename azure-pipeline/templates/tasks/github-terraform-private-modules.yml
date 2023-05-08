@@ -1,0 +1,6 @@
+steps:
+  - task: InstallSSHKey@0
+    displayName: 'configure github deploy keys (terraform-private-modules)'
+    inputs:
+      knownHostsEntry: $(KnownHostsEntry)
+      sshKeySecureFile: id_ed25519     

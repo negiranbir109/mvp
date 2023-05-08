@@ -1,0 +1,20 @@
+parameters:
+- name: tf_variables
+  type: string
+  default: ''
+
+steps:
+  - script: 'terraform plan -out=tfplan ${{ parameters.tf_variables }}'
+    displayName: 'terraform plan'
+    env:
+      ARM_CLIENT_ID: $(azureClientId)
+      ARM_CLIENT_SECRET: $(azureClientSecret)
+      ARM_SUBSCRIPTION_ID: $(azureSubscriptionId)
+      ARM_TENANT_ID: $(azureTenantId)
+  - script: 'terraform apply -auto-approve ${{ parameters.tf_variables }}'
+    displayName: 'terraform apply'
+    env:
+      ARM_CLIENT_ID: $(azureClientId)
+      ARM_CLIENT_SECRET: $(azureClientSecret)
+      ARM_SUBSCRIPTION_ID: $(azureSubscriptionId)
+      ARM_TENANT_ID: $(azureTenantId)

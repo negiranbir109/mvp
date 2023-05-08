@@ -1,0 +1,21 @@
+parameters:
+- name: module_sources_type
+  displayName: 'Specify modules sources type (ssh or https).'
+  type: string
+  default: ''
+
+steps:
+  - ${{ if eq(parameters.module_sources_type, 'ssh') }}:
+    - task: Bash@3
+      displayName: 'replace terraform modules type with ssh'
+      inputs:
+        targetType: 'inline'
+        script: |
+                sed -Ei 's|github.com/KPMG-UK|git@github.com:KPMG-UK|g' main.tf
+  - ${{ if eq(parameters.module_sources_type, 'https') }}:
+    - task: Bash@3
+      displayName: 'replace terraform modules type with https'
+      inputs:
+        targetType: 'inline'
+        script: |
+                sed -Ei 's|git@github.com:KPMG-UK|github.com/KPMG-UK|g' main.tf

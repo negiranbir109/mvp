@@ -1,0 +1,43 @@
+parameters:
+- name: agent_pool_name
+  displayName: 'Agent pool name'
+  type: string
+  default: ubuntu-latest
+  values:
+  - windows-latest
+  - ubuntu-latest
+- name: publish_artifact_name
+  displayName: 'Publish artifact name'
+  type: string
+  default: drop
+- name: publish_artifact_contents
+  displayName: 'Publish artifact contents file paths'
+  type: string
+- name: terraform_modules_repository
+  displayName: 'Name of the private terraform modules repository'
+  type: string
+  default: ''
+
+jobs:
+- job: build
+  displayName: build
+  pool: 
+    vmImage: ${{ parameters.agent_pool_name }}
+  variables:
+    group: terraform-private-modules
+  steps:
+  - template: tasks/checkout-self-repository.yml
+  - template: tasks/terraform-using-ssh-modules.yml
+    parameters:
+      module_sources_type: 'ssh'
+  - template: tasks/github-terraform-private-modules.yml
+  - template: tasks/pre-commit-tools-install.yml
+  - template: tasks/terraform-tools-install.yml
+  - template: tasks/pre-commit-tools-run.yml
+  - template: tasks/terraform-using-ssh-modules.yml
+    parameters:
+      module_sources_type: 'https'
+  - template: tasks/artefacts-publish.yml
+    parameters:
+      publish_artifact_name: ${{ parameters.publish_artifact_name }}
+      publish_artifact_contents: ${{ parameters.publish_artifact_contents }}

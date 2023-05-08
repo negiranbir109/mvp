@@ -1,0 +1,10 @@
+parameters:
+- name: terraform_modules_repository
+  displayName: 'Name of the private terraform modules repository'
+  type: string
+  default: ''
+
+steps:
+  - ${{ if ne(parameters.terraform_modules_repository, '') }}:
+    - checkout: ${{ parameters.terraform_modules_repository }}
+      displayName: 'checkout terraform private modules repository'

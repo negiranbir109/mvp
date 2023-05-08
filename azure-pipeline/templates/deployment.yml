@@ -1,0 +1,85 @@
+parameters:
+- name: agent_pool_name
+  displayName: 'Agent pool name'
+  type: string
+  default: ubuntu-latest
+  values:
+  - windows-latest
+  - ubuntu-latest
+- name: deployment_environment
+  displayName: 'Deployment environment name'
+  type: string
+  values:
+  - Sandbox
+  - Development
+  - Staging
+  - Production
+- name: azure_resource_manager_connection
+  displayName: 'Azure Resource Manager connection'
+  type: string
+- name: project_id
+  displayName: 'Deployment project id'
+  type: string
+- name: artifact_published_pipeline_id
+  displayName: 'Artifact published pipeline id'
+  type: string
+- name: publish_artifact_name
+  displayName: 'Publish artifact name'
+  type: string
+  default: drop
+- name: terraform_modules_repository
+  displayName: 'Name of the private terraform modules repository'
+  type: string
+  default: ''
+- name: tf_az_backend_resource_group_name
+  displayName: 'Terraform Azure backend resource group name'
+  type: string
+- name: tf_az_backend_storage_account_name
+  displayName: 'Terraform Azure backend storage account name'
+  type: string
+- name: tf_az_backend_container_name
+  displayName: 'Terraform Azure backend container name'
+  type: string
+- name: tf_az_backend_state_file_name
+  displayName: 'Terraform Azure backend state file name'
+  type: string
+- name: tf_variables
+  displayName: 'Terraform command line tools input arguments - e.g. defined in variables.tf'
+  type: string
+
+stages:
+  - stage: ${{ parameters.deployment_environment }}
+    jobs:
+      - deployment: 'terraform'
+        displayName: Deployment to ${{ parameters.deployment_environment }}
+        pool:
+          vmImage: ${{ parameters.agent_pool_name }}
+        variables:
+          group: terraform-private-modules
+        environment: ${{ parameters.deployment_environment }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: tasks/artefacts-download.yml
+                  parameters:
+                    project_id: ${{ parameters.project_id }}
+                    artifact_published_pipeline_id: ${{ parameters.artifact_published_pipeline_id }}
+                    publish_artifact_name: ${{ parameters.publish_artifact_name }}
+                - template: tasks/terraform-using-ssh-modules.yml
+                  parameters:
+                    module_sources_type: 'ssh'
+                - template: tasks/github-terraform-private-modules.yml
+                - template: tasks/azure-service-principal-authentication.yml
+                  parameters:
+                    azure_resource_manager_connection: ${{ parameters.azure_resource_manager_connection }}
+                - template: tasks/terraform-tools-install.yml
+                  parameters:
+                    initialise_with_backend: true
+                    tf_az_backend_resource_group_name: ${{ parameters.tf_az_backend_resource_group_name }}
+                    tf_az_backend_storage_account_name: ${{ parameters.tf_az_backend_storage_account_name }}
+                    tf_az_backend_container_name: ${{ parameters.tf_az_backend_container_name }}
+                    tf_az_backend_state_file_name: ${{ parameters.tf_az_backend_state_file_name }}
+                - template: tasks/terraform-tools-run.yml
+                  parameters:
+                    tf_variables: ${{ parameters.tf_variables }}

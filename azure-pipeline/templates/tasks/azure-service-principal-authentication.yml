@@ -1,0 +1,19 @@
+parameters:
+- name: azure_resource_manager_connection
+  displayName: 'Azure Resource Manager connection'
+  type: string
+  default: ''
+
+steps:
+  - task: AzureCLI@2
+    displayName: 'azure service principal authentication'
+    inputs:
+      azureSubscription: ${{ parameters.azure_resource_manager_connection }}
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+                    echo "##vso[task.setvariable variable=azureSubscriptionId;issecret=true]$(az account show --query id --output tsv)"
+                    echo "##vso[task.setvariable variable=azureClientId;]$servicePrincipalId"
+                    echo "##vso[task.setvariable variable=azureClientSecret;]$servicePrincipalKey"
+                    echo "##vso[task.setvariable variable=azureTenantId;]$tenantId"
+      addSpnToEnvironment: true
