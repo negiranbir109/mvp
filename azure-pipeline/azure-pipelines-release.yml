@@ -4,22 +4,22 @@ resources:
   repositories:
     - repository: templates
       type: github
-      name: KPMG-UK/ewt-engineering-azure-infrastructure-template
-      ref: 'fix/self-hosted-pool'
-      endpoint: 'Migrate Squad Sandbox'
+      name: ranbirlab/testapp
+      ref: main
+      endpoint: 'github.com_negiranbir109'
 
 stages:
-- template: .azure-pipelines/templates/multi-stage-deployment.yml@templates
-  parameters:
-    agent_pool_name: 'tax-stg-prd'
-    deployment_environment: 'TaxStaging'
-    azure_resource_manager_connection: 'uk-ewt-tax-pipeline'
-    project_id: 'c87302c7-ffbd-4d51-8e80-5b57ffa46d40'
-    artifact_published_pipeline_id: '112'
-    publish_artifact_name: 'drop'
-    tf_az_backend_resource_group_name: 'uk-uks-tax-stg-rg-mvp-tfstate'
-    tf_az_backend_storage_account_name: 'ukazrsttaxstgmvptf1010'
-    tf_az_backend_container_name: 'terraform-state'
-    tf_az_backend_state_file_name: 'state.tfstate'
-    tf_variables: |
-                -var-file="./environments/staging-tfvars.cfg"
+  - template: .azure-pipelines/templates/multi-stage-deployment.yml@templates
+    parameters:
+      agent_pool_name: 'ubuntu-latest'
+      deployment_environment: 'TaxStaging'
+      azure_resource_manager_connection: '<new_azure_resource_manager_connection>'
+      project_id: '<new_project_id>'
+      artifact_published_pipeline_id: '<new_artifact_published_pipeline_id>'
+      publish_artifact_name: '<new_publish_artifact_name>'
+      tf_az_backend_resource_group_name: 'TF-Backend-RG'
+      tf_az_backend_storage_account_name: 'tfdemobackend
+      tf_az_backend_container_name: 'tax-tfstate'
+      tf_az_backend_state_file_name: 'state.tfstate'
+      tf_variables: |
+                  -var-file="./environments/staging-tfvars.cfg"

@@ -1,5 +1,5 @@
 trigger:
-- main
+  - main
 
 pr: none
 
@@ -7,16 +7,15 @@ resources:
   repositories:
     - repository: templates
       type: github
-      name: KPMG-UK/ewt-engineering-azure-infrastructure-template
-      ref: 'fix/self-hosted-pool'
-      endpoint: 'Migrate Squad Sandbox'
+      name: ranbirlab/testapp
+      ref: main
+      endpoint: 'github.com_negiranbir109'
 
 jobs:
-- template: azure-pipelines/templates/build.yml@templates
-  parameters:
-    agent_pool_name: 'tax-stg-prd'
-    publish_artifact_contents: |
-                              .terraform.lock.hcl
-                              *.tf
-                              modules/**
-                              environments/**
+  - template: .azure-pipelines/templates/build.yml@templates
+    parameters:
+      agent_pool_name: 'ubuntu-latest'
+      publish_artifact_contents: |
+                                .terraform.lock.hcl
+                                *.tf
+                                environments/**
