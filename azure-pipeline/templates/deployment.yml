@@ -52,8 +52,8 @@ stages:
     jobs:
       - deployment: 'terraform'
         displayName: Deployment to ${{ parameters.deployment_environment }}
-        pool:
-          vmImage: ${{ parameters.agent_pool_name }}
+#         pool:
+#           vmImage: ${{ parameters.agent_pool_name }}
         variables:
           group: terraform-private-modules
         environment: ${{ parameters.deployment_environment }}
