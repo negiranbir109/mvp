@@ -12,7 +12,7 @@ resources:
       type: github
       name: negiranbir109/mvp
       ref: main
-      endpoint: 'github.com_negiranbir109'
+      endpoint: 'testconnect'
 
 stages:
 - stage: Terraform_APPLY
