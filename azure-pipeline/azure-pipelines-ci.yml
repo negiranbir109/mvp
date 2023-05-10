@@ -10,7 +10,7 @@ resources:
   repositories:
     - repository: templates
       type: github
-      name: ranbirlab/testapp
+      name: negiranbir109/mvp
       ref: main
       endpoint: 'github.com_negiranbir109'
 
