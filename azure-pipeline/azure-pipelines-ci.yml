@@ -13,10 +13,3 @@ resources:
       name: negiranbir109/mvp
       ref: main
       endpoint: 'github.com_negiranbir109'
-
-jobs:
-  - template: azure-pipelines/templates/build.yml@templates
-      publish_artifact_contents: |
-                                .terraform.lock.hcl
-                                *.tf
-                                environments/**
