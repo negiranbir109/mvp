@@ -13,3 +13,22 @@ resources:
       name: negiranbir109/mvp
       ref: main
       endpoint: 'github.com_negiranbir109'
+
+stages:
+- stage: Terraform_APPLY
+  displayName: Apply Infrastructure Changes
+
+  jobs:
+  - job: Apply_Changes
+    displayName: Apply Changes
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: Bash@3
+        displayName: Run Script
+        inputs:
+          targetType: 'inline'
+          script: |
+            echo 'ls'
+
+  
